@@ -1,13 +1,419 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Admissions — CS Dept COMSATS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --navy:#0a1628; --navy2:#0f2044; --blue:#1a4fd6; --sky:#3b82f6; --accent2:#fbbf24; --white:#fff; --gray:#94a3b8; --text:#cbd5e1; --green:#10b981; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--navy); color: var(--white); overflow-x: hidden; }
+
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 4rem; background: rgba(10,22,40,0.92); backdrop-filter: blur(18px); border-bottom: 1px solid rgba(59,130,246,0.15); }
+    .nav-logo { display: flex; align-items: center; gap: .75rem; text-decoration: none; }
+    .nav-logo .badge { width: 38px; height: 38px; border-radius: 10px; background: linear-gradient(135deg, var(--blue), var(--sky)); display: grid; place-items: center; font-family: 'Syne', sans-serif; font-weight: 800; font-size: .9rem; color: #fff; }
+    .nav-logo span { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; color: var(--white); line-height: 1.2; }
+    .nav-logo small { display: block; font-weight: 400; font-size: .72rem; color: var(--gray); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { text-decoration: none; color: var(--text); font-size: .88rem; font-weight: 500; transition: color .2s; }
+    .nav-links a:hover { color: var(--white); }
+    .nav-links a.active { color: var(--accent2); }
+    .nav-cta { background: var(--blue); color: #fff; padding: .55rem 1.3rem; border-radius: 8px; font-size: .85rem; font-weight: 600; text-decoration: none; transition: background .2s; }
+    .nav-cta:hover { background: var(--sky); }
+
+    /* HERO */
+    .page-hero { padding: 8rem 4rem 4rem; position: relative; overflow: hidden; background: var(--navy2); border-bottom: 1px solid rgba(59,130,246,.12); }
+    .page-hero .grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(59,130,246,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(59,130,246,.06) 1px, transparent 1px); background-size: 60px 60px; }
+    .page-hero .glow { position: absolute; top: -20%; right: -10%; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(26,79,214,.25) 0%, transparent 65%); }
+    .hero-inner { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 3rem; }
+    .hero-text { max-width: 580px; }
+    .section-tag { display: inline-block; font-size: .75rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--accent2); margin-bottom: .8rem; }
+    .page-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(2.2rem, 4vw, 3.2rem); letter-spacing: -.02em; line-height: 1.1; }
+    .page-title em { font-style: normal; background: linear-gradient(90deg, var(--sky), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .page-desc { margin-top: 1rem; font-size: 1rem; line-height: 1.75; color: var(--text); }
+    .hero-actions { display: flex; gap: 1rem; margin-top: 2rem; flex-wrap: wrap; }
+    .btn-primary { background: linear-gradient(135deg, var(--blue), var(--sky)); color: #fff; padding: .75rem 1.8rem; border-radius: 10px; font-weight: 600; font-size: .9rem; text-decoration: none; transition: transform .2s; box-shadow: 0 4px 20px rgba(26,79,214,.4); }
+    .btn-primary:hover { transform: translateY(-2px); }
+    .btn-outline { background: transparent; border: 1px solid rgba(255,255,255,.2); color: var(--white); padding: .75rem 1.8rem; border-radius: 10px; font-weight: 500; font-size: .9rem; text-decoration: none; transition: background .2s; }
+    .btn-outline:hover { background: rgba(255,255,255,.08); }
+
+    /* DEADLINE CARD */
+    .deadline-card { background: rgba(10,22,40,.8); border: 1px solid rgba(245,158,11,.3); border-radius: 16px; padding: 1.8rem 2rem; min-width: 260px; backdrop-filter: blur(12px); }
+    .deadline-card h3 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: .85rem; text-transform: uppercase; letter-spacing: .08em; color: var(--accent2); margin-bottom: 1.2rem; }
+    .deadline-item { display: flex; justify-content: space-between; align-items: center; padding: .6rem 0; border-bottom: 1px solid rgba(255,255,255,.06); gap: 1rem; }
+    .deadline-item:last-child { border-bottom: none; }
+    .deadline-label { font-size: .82rem; color: var(--text); }
+    .deadline-date { font-size: .8rem; font-weight: 600; color: var(--accent2); white-space: nowrap; }
+    .deadline-date.urgent { color: #f87171; }
+    .deadline-date.done { color: #34d399; }
+
+    /* STATS */
+    .stats-bar { background: var(--navy2); border-bottom: 1px solid rgba(59,130,246,.1); padding: 1.5rem 4rem; display: flex; gap: 3rem; }
+    .stat-item { text-align: center; }
+    .stat-num { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.6rem; background: linear-gradient(90deg, var(--white), var(--sky)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .stat-label { font-size: .72rem; color: var(--gray); text-transform: uppercase; letter-spacing: .06em; margin-top: .1rem; }
+
+    /* SECTIONS */
+    .content { padding: 0 4rem 5rem; }
+
+    /* PROGRAMS */
+    .sec { padding-top: 4rem; }
+    .sec-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.6rem; margin-bottom: .5rem; }
+    .sec-sub { color: var(--text); font-size: .95rem; margin-bottom: 2rem; }
+
+    .programs-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; margin-bottom: 1rem; }
+    .prog-card { background: var(--navy2); border: 1px solid rgba(59,130,246,.12); border-radius: 16px; padding: 1.8rem; position: relative; overflow: hidden; transition: transform .2s, border-color .2s; }
+    .prog-card:hover { transform: translateY(-4px); border-color: rgba(59,130,246,.4); }
+    .prog-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; transition: opacity .2s; opacity: 0; }
+    .prog-card:hover::before { opacity: 1; }
+    .prog-card.bscs::before { background: linear-gradient(90deg, #1a4fd6, #3b82f6); }
+    .prog-card.mscs::before { background: linear-gradient(90deg, #0f766e, #14b8a6); }
+    .prog-card.phd::before  { background: linear-gradient(90deg, #7c3aed, #a78bfa); }
+    .prog-icon { font-size: 2rem; margin-bottom: 1rem; }
+    .prog-name { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.1rem; margin-bottom: .3rem; }
+    .prog-full { font-size: .8rem; color: var(--gray); margin-bottom: 1rem; }
+    .prog-detail { display: flex; flex-direction: column; gap: .45rem; margin-bottom: 1.2rem; }
+    .prog-row { display: flex; gap: .6rem; align-items: flex-start; font-size: .82rem; color: var(--text); }
+    .prog-row strong { color: var(--white); min-width: 80px; flex-shrink: 0; }
+    .prog-tags { display: flex; gap: .4rem; flex-wrap: wrap; }
+    .ptag { font-size: .68rem; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; padding: .16rem .5rem; border-radius: 4px; background: rgba(59,130,246,.1); color: var(--sky); border: 1px solid rgba(59,130,246,.2); }
+
+    /* STEPS */
+    .steps-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; position: relative; }
+    .steps-grid::before { content: ''; position: absolute; top: 28px; left: 10%; right: 10%; height: 2px; background: linear-gradient(90deg, var(--blue), var(--sky)); z-index: 0; }
+    .step-item { text-align: center; position: relative; z-index: 1; padding: 0 .5rem; }
+    .step-circle { width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, var(--blue), var(--sky)); display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.1rem; border: 3px solid var(--navy); box-shadow: 0 0 0 2px var(--sky); }
+    .step-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: .88rem; margin-bottom: .4rem; }
+    .step-desc { font-size: .75rem; color: var(--gray); line-height: 1.6; }
+
+    /* CRITERIA */
+    .criteria-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .criteria-card { background: var(--navy2); border: 1px solid rgba(59,130,246,.12); border-radius: 16px; padding: 1.8rem; }
+    .criteria-card h3 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; margin-bottom: 1.2rem; display: flex; align-items: center; gap: .6rem; }
+    .criteria-list { list-style: none; display: flex; flex-direction: column; gap: .7rem; }
+    .criteria-list li { display: flex; align-items: flex-start; gap: .75rem; font-size: .85rem; color: var(--text); line-height: 1.5; }
+    .criteria-list li::before { content: '✓'; color: #34d399; font-weight: 700; flex-shrink: 0; margin-top: .05rem; }
+    .criteria-list li.req::before { content: '★'; color: var(--accent2); }
+    .criteria-list li.no::before  { content: '✗'; color: #f87171; }
+
+    /* SCHOLARSHIPS */
+    .schol-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
+    .schol-card { background: var(--navy2); border: 1px solid rgba(59,130,246,.12); border-radius: 14px; padding: 1.5rem; transition: transform .2s, border-color .2s; }
+    .schol-card:hover { transform: translateY(-3px); border-color: rgba(59,130,246,.35); }
+    .schol-icon { font-size: 1.8rem; margin-bottom: .8rem; }
+    .schol-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: .95rem; margin-bottom: .4rem; }
+    .schol-amount { font-size: .85rem; color: #34d399; font-weight: 600; margin-bottom: .6rem; }
+    .schol-desc { font-size: .8rem; color: var(--text); line-height: 1.6; }
+
+    /* FAQ */
+    .faq-list { display: flex; flex-direction: column; gap: .75rem; max-width: 800px; }
+    .faq-item { background: var(--navy2); border: 1px solid rgba(59,130,246,.12); border-radius: 12px; overflow: hidden; }
+    .faq-q { padding: 1.1rem 1.4rem; font-weight: 600; font-size: .9rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: background .2s; }
+    .faq-q:hover { background: rgba(59,130,246,.06); }
+    .faq-icon { font-size: 1.1rem; transition: transform .3s; color: var(--sky); flex-shrink: 0; }
+    .faq-icon.open { transform: rotate(45deg); }
+    .faq-a { font-size: .85rem; color: var(--text); line-height: 1.7; padding: 0 1.4rem; max-height: 0; overflow: hidden; transition: max-height .3s ease, padding .3s; }
+    .faq-a.open { max-height: 200px; padding: 0 1.4rem 1.1rem; }
+
+    /* CTA */
+    .cta-section { margin-top: 4rem; background: linear-gradient(135deg, rgba(26,79,214,.2), rgba(59,130,246,.1)); border: 1px solid rgba(59,130,246,.25); border-radius: 20px; padding: 3rem; text-align: center; }
+    .cta-section h2 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.8rem; margin-bottom: .75rem; }
+    .cta-section p { color: var(--text); margin-bottom: 2rem; font-size: .95rem; }
+    .cta-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+    footer { background: #060e1e; border-top: 1px solid rgba(59,130,246,.12); padding: 2rem 4rem; display: flex; justify-content: space-between; }
+    footer p { font-size: .8rem; color: var(--gray); }
+
+    @media (max-width: 1024px) { .programs-grid { grid-template-columns: 1fr 1fr; } .steps-grid { grid-template-columns: 1fr 1fr; } .steps-grid::before { display: none; } }
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; } .nav-links, .nav-cta { display: none; }
+      .page-hero, .stats-bar, .content, footer { padding-left: 1.5rem; padding-right: 1.5rem; }
+      .hero-inner { flex-direction: column; } .deadline-card { width: 100%; }
+      .programs-grid, .criteria-grid, .schol-grid { grid-template-columns: 1fr; }
+      .steps-grid { grid-template-columns: 1fr 1fr; } .steps-grid::before { display: none; }
+      .stats-bar { gap: 1.5rem; flex-wrap: wrap; }
+    }
+  </style>
 </head>
 <body>
-  <h1>Admissions Page</h1>
-  <p>This page will be completed by the assigned team member.</p>
-  <a href="index.html">Back to Home</a>
+
+<nav>
+  <a class="nav-logo" href="index.html">
+    <div class="badge">CS</div>
+    <span>Computer Science <small>COMSATS University Islamabad</small></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="courses.html">Courses</a></li>
+    <li><a href="faculty.html">Faculty</a></li>
+    <li><a href="admissions.html" class="active">Admissions</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <a href="#apply" class="nav-cta">Apply Now</a>
+</nav>
+
+<!-- HERO -->
+<div class="page-hero">
+  <div class="grid"></div><div class="glow"></div>
+  <div class="hero-inner">
+    <div class="hero-text">
+      <div class="section-tag">Join Our Department</div>
+      <h1 class="page-title">Start Your <em>CS Journey</em></h1>
+      <p class="page-desc">Applications are open for Fall 2025. Join thousands of students who have launched successful careers in technology from our department. Merit-based admissions, world-class faculty, and a curriculum built for the future.</p>
+      <div class="hero-actions">
+        <a href="#apply" class="btn-primary">Apply Now →</a>
+        <a href="#programs" class="btn-outline">View Programs</a>
+      </div>
+    </div>
+    <div class="deadline-card">
+      <h3>📅 Key Deadlines — Fall 2025</h3>
+      <div class="deadline-item"><span class="deadline-label">Applications Open</span><span class="deadline-date done">Mar 1, 2025</span></div>
+      <div class="deadline-item"><span class="deadline-label">Early Decision</span><span class="deadline-date done">Apr 30, 2025</span></div>
+      <div class="deadline-item"><span class="deadline-label">Regular Deadline</span><span class="deadline-date urgent">Jun 15, 2025</span></div>
+      <div class="deadline-item"><span class="deadline-label">Merit List</span><span class="deadline-date">Jul 10, 2025</span></div>
+      <div class="deadline-item"><span class="deadline-label">Fee Submission</span><span class="deadline-date">Jul 25, 2025</span></div>
+      <div class="deadline-item"><span class="deadline-label">Classes Begin</span><span class="deadline-date">Sep 1, 2025</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stat-item"><div class="stat-num">2500+</div><div class="stat-label">Current Students</div></div>
+  <div class="stat-item"><div class="stat-num">94%</div><div class="stat-label">Employment Rate</div></div>
+  <div class="stat-item"><div class="stat-num">50+</div><div class="stat-label">Scholarships</div></div>
+  <div class="stat-item"><div class="stat-num">4</div><div class="stat-label">Degree Programs</div></div>
+</div>
+
+<div class="content">
+
+  <!-- PROGRAMS -->
+  <div class="sec" id="programs">
+    <div class="section-tag">Degree Programs</div>
+    <h2 class="sec-title">Choose Your Program</h2>
+    <p class="sec-sub">All programs are HEC recognized and designed to meet international standards.</p>
+    <div class="programs-grid">
+      <div class="prog-card bscs">
+        <div class="prog-icon">🎯</div>
+        <div class="prog-name">BSCS</div>
+        <div class="prog-full">Bachelor of Science in Computer Science</div>
+        <div class="prog-detail">
+          <div class="prog-row"><strong>Duration</strong> 4 Years (8 Semesters)</div>
+          <div class="prog-row"><strong>Credits</strong> 136 Credit Hours</div>
+          <div class="prog-row"><strong>Intake</strong> Fall & Spring</div>
+          <div class="prog-row"><strong>Seats</strong> 120 per semester</div>
+          <div class="prog-row"><strong>Fee</strong> PKR 35,000/semester</div>
+        </div>
+        <div class="prog-tags"><span class="ptag">Undergraduate</span><span class="ptag">HEC Recognized</span></div>
+      </div>
+      <div class="prog-card mscs">
+        <div class="prog-icon">🧠</div>
+        <div class="prog-name">MSCS</div>
+        <div class="prog-full">Master of Science in Computer Science</div>
+        <div class="prog-detail">
+          <div class="prog-row"><strong>Duration</strong> 2 Years (4 Semesters)</div>
+          <div class="prog-row"><strong>Credits</strong> 30 Credit Hours</div>
+          <div class="prog-row"><strong>Intake</strong> Fall Only</div>
+          <div class="prog-row"><strong>Seats</strong> 40 per semester</div>
+          <div class="prog-row"><strong>Fee</strong> PKR 45,000/semester</div>
+        </div>
+        <div class="prog-tags"><span class="ptag">Graduate</span><span class="ptag">Thesis / Coursework</span></div>
+      </div>
+      <div class="prog-card phd">
+        <div class="prog-icon">🔬</div>
+        <div class="prog-name">PhD CS</div>
+        <div class="prog-full">Doctor of Philosophy in Computer Science</div>
+        <div class="prog-detail">
+          <div class="prog-row"><strong>Duration</strong> 3–5 Years</div>
+          <div class="prog-row"><strong>Credits</strong> 18 CH + Dissertation</div>
+          <div class="prog-row"><strong>Intake</strong> Fall Only</div>
+          <div class="prog-row"><strong>Seats</strong> 15 per year</div>
+          <div class="prog-row"><strong>Fee</strong> PKR 55,000/semester</div>
+        </div>
+        <div class="prog-tags"><span class="ptag">Doctoral</span><span class="ptag">Research</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOW TO APPLY -->
+  <div class="sec" id="apply">
+    <div class="section-tag">Application Process</div>
+    <h2 class="sec-title">How to Apply</h2>
+    <p class="sec-sub">Follow these five simple steps to complete your application.</p>
+    <div class="steps-grid">
+      <div class="step-item">
+        <div class="step-circle">1</div>
+        <div class="step-title">Register Online</div>
+        <p class="step-desc">Create an account on the COMSATS admissions portal at admissions.comsats.edu.pk</p>
+      </div>
+      <div class="step-item">
+        <div class="step-circle">2</div>
+        <div class="step-title">Fill Application</div>
+        <p class="step-desc">Complete the online form with your personal, academic, and program details.</p>
+      </div>
+      <div class="step-item">
+        <div class="step-circle">3</div>
+        <div class="step-title">Upload Documents</div>
+        <p class="step-desc">Upload scanned copies of transcripts, CNIC, passport photos, and test scores.</p>
+      </div>
+      <div class="step-item">
+        <div class="step-circle">4</div>
+        <div class="step-title">Pay Fee</div>
+        <p class="step-desc">Submit the non-refundable application processing fee of PKR 2,000 via bank or online.</p>
+      </div>
+      <div class="step-item">
+        <div class="step-circle">5</div>
+        <div class="step-title">Await Merit List</div>
+        <p class="step-desc">Monitor the admissions portal for your merit list result and enrollment instructions.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CRITERIA -->
+  <div class="sec">
+    <div class="section-tag">Eligibility</div>
+    <h2 class="sec-title">Admission Criteria</h2>
+    <p class="sec-sub">Minimum requirements for each degree program.</p>
+    <div class="criteria-grid">
+      <div class="criteria-card">
+        <h3>🎯 BSCS — Undergraduate</h3>
+        <ul class="criteria-list">
+          <li class="req">Intermediate (FSc Pre-Engineering / ICS) or A-Levels</li>
+          <li class="req">Minimum 50% marks in Intermediate</li>
+          <li class="req">NTS / SAT / COMSATS entry test score required</li>
+          <li>Mathematics as a compulsory subject</li>
+          <li>Age limit: 22 years at time of admission</li>
+          <li>Pakistani nationals and foreign students both eligible</li>
+          <li class="no">Commerce / Arts background not eligible</li>
+        </ul>
+      </div>
+      <div class="criteria-card">
+        <h3>🧠 MSCS — Graduate</h3>
+        <ul class="criteria-list">
+          <li class="req">16-year education (BS / BCS / BE in CS or related)</li>
+          <li class="req">Minimum CGPA 2.0 / 60% marks in Bachelor's</li>
+          <li class="req">GAT General (NTS) score of 50+ required</li>
+          <li>GRE Subject score accepted in lieu of GAT</li>
+          <li>Interview may be required for shortlisted candidates</li>
+          <li>Working professionals encouraged to apply</li>
+          <li>Evening programme available for employed applicants</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCHOLARSHIPS -->
+  <div class="sec">
+    <div class="section-tag">Financial Aid</div>
+    <h2 class="sec-title">Scholarships Available</h2>
+    <p class="sec-sub">We believe financial constraints should never stop a talented student.</p>
+    <div class="schol-grid">
+      <div class="schol-card">
+        <div class="schol-icon">🏆</div>
+        <div class="schol-name">Merit Scholarship</div>
+        <div class="schol-amount">Up to 100% fee waiver</div>
+        <p class="schol-desc">Awarded to top 5% of students based on entry test score and intermediate marks. Renewable each semester with CGPA 3.5+.</p>
+      </div>
+      <div class="schol-card">
+        <div class="schol-icon">💙</div>
+        <div class="schol-name">Need-Based Aid</div>
+        <div class="schol-amount">25%–75% fee concession</div>
+        <p class="schol-desc">For students from low-income families. Requires income certificate and B-Form. Evaluated by the financial aid committee.</p>
+      </div>
+      <div class="schol-card">
+        <div class="schol-icon">👩‍💻</div>
+        <div class="schol-name">Women in Tech</div>
+        <div class="schol-amount">50% fee concession</div>
+        <p class="schol-desc">Dedicated scholarship for female students enrolling in CS or Cyber Security to promote gender diversity in STEM.</p>
+      </div>
+      <div class="schol-card">
+        <div class="schol-icon">🌍</div>
+        <div class="schol-name">HEC Need-Based</div>
+        <div class="schol-amount">Full stipend + fee</div>
+        <p class="schol-desc">Higher Education Commission scholarships for deserving students. Apply separately through the HEC portal.</p>
+      </div>
+      <div class="schol-card">
+        <div class="schol-icon">🎖️</div>
+        <div class="schol-name">Sports / Hafiz-e-Quran</div>
+        <div class="schol-amount">25% fee concession</div>
+        <p class="schol-desc">Available for students who are hafiz-e-Quran or national/provincial level sports achievers. Certificate required.</p>
+      </div>
+      <div class="schol-card">
+        <div class="schol-icon">👨‍👩‍👧</div>
+        <div class="schol-name">Sibling Discount</div>
+        <div class="schol-amount">10% fee concession</div>
+        <p class="schol-desc">If you have a sibling currently enrolled at COMSATS, you are eligible for a 10% concession on semester fee.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="sec">
+    <div class="section-tag">FAQ</div>
+    <h2 class="sec-title">Frequently Asked Questions</h2>
+    <p class="sec-sub">Got questions? We have answers.</p>
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Is there an entry test? <span class="faq-icon">+</span></div>
+        <div class="faq-a">Yes. BSCS applicants must appear in the COMSATS entry test or submit a valid NTS / SAT score. The entry test covers Mathematics, English, and basic Computer Science concepts. Test dates are published on the admissions portal.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Can I apply with ICS (Physics)? <span class="faq-icon">+</span></div>
+        <div class="faq-a">Yes. ICS with Physics or Mathematics is accepted for BSCS admission. You must have at least 50% marks overall and Mathematics must be one of your subjects.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">When is the next intake? <span class="faq-icon">+</span></div>
+        <div class="faq-a">The next intake is Fall 2025, with classes beginning September 1, 2025. The application deadline is June 15, 2025. A Spring 2026 intake is also planned for BSCS only.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Can I transfer from another university? <span class="faq-icon">+</span></div>
+        <div class="faq-a">Credit transfer is possible for students from HEC-recognized institutions. A minimum CGPA of 2.5 is required and courses are evaluated individually by the academic committee. Transfer applications must be submitted before the regular deadline.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Is evening / weekend programme available? <span class="faq-icon">+</span></div>
+        <div class="faq-a">Yes. The MSCS programme offers an evening track specifically designed for working professionals. Classes are held on weekday evenings and Saturday mornings. This track has the same curriculum and degree as the regular programme.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">How do I apply for a scholarship? <span class="faq-icon">+</span></div>
+        <div class="faq-a">Merit scholarships are awarded automatically based on your entry test score. For need-based and other scholarships, submit the scholarship application form along with supporting documents to the Scholarships Office within two weeks of enrollment.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-section" id="contact-cta">
+    <h2>Ready to Apply?</h2>
+    <p>Take the first step toward your future in computing. Applications for Fall 2025 close June 15.</p>
+    <div class="cta-btns">
+      <a href="https://admissions.comsats.edu.pk" target="_blank" class="btn-primary">Start Application →</a>
+      <a href="contact.html" class="btn-outline">Contact Admissions Office</a>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p>© 2025 Department of Computer Science, COMSATS University Islamabad, Lahore Campus.</p>
+  <p>Built with GitHub Actions · Docker · Render.com</p>
+</footer>
+
+<script>
+  function toggleFaq(el) {
+    const answer = el.nextElementSibling;
+    const icon = el.querySelector('.faq-icon');
+    const isOpen = answer.classList.contains('open');
+    document.querySelectorAll('.faq-a').forEach(a => a.classList.remove('open'));
+    document.querySelectorAll('.faq-icon').forEach(i => i.classList.remove('open'));
+    if (!isOpen) {
+      answer.classList.add('open');
+      icon.classList.add('open');
+    }
+  }
+</script>
+
 </body>
 </html>
