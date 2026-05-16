@@ -4,12 +4,11 @@ on:
   push:
     branches: [ 'release/**' ]
 
-environment: staging
-
 jobs:
   deploy-staging:
     name: Build & Push to Docker Hub (Staging)
     runs-on: ubuntu-latest
+    environment: staging
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

@@ -4,12 +4,11 @@ on:
   push:
     branches: [ main ]
 
-environment: production
-
 jobs:
   deploy-production:
     name: Build & Push to Docker Hub (Production)
     runs-on: ubuntu-latest
+    environment: production
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
