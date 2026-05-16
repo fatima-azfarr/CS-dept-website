@@ -8,7 +8,7 @@ environment: staging
 
 jobs:
   deploy-staging:
-    name: Deploy to Staging/QA (Render)
+    name: Build & Push to Docker Hub (Staging)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -25,8 +25,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/cs-dept-website:staging-${{ github.sha }}
-      - name: Trigger Render Deploy
-        run: |
-          curl -s -X POST "${{ secrets.RENDER_DEPLOY_HOOK_STAGING }}" --fail
-          echo "Staging deploy triggered"
+          tags: ${{ secrets.DOCKER_USERNAME }}/cs-dept-website:staging-latest

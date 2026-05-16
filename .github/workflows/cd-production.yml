@@ -8,7 +8,7 @@ environment: production
 
 jobs:
   deploy-production:
-    name: Deploy to Production (Render)
+    name: Build & Push to Docker Hub (Production)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -26,9 +26,5 @@ jobs:
           context: .
           push: true
           tags: |
-            ${{ secrets.DOCKER_USERNAME }}/cs-dept-website:prod-${{ github.sha }}
+            ${{ secrets.DOCKER_USERNAME }}/cs-dept-website:prod-latest
             ${{ secrets.DOCKER_USERNAME }}/cs-dept-website:latest
-      - name: Trigger Render Deploy
-        run: |
-          curl -s -X POST "${{ secrets.RENDER_DEPLOY_HOOK_PROD }}" --fail
-          echo "Production deploy triggered"
