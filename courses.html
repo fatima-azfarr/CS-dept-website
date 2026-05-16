@@ -1,13 +1,253 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Courses — CS Dept COMSATS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy:#0a1628; --navy2:#0f2044; --blue:#1a4fd6; --sky:#3b82f6;
+      --accent2:#fbbf24; --white:#ffffff; --gray:#94a3b8; --text:#cbd5e1;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--navy); color: var(--white); overflow-x: hidden; }
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.1rem 4rem;
+      background: rgba(10,22,40,0.88); backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(59,130,246,0.15);
+    }
+    .nav-logo { display: flex; align-items: center; gap: .75rem; text-decoration: none; }
+    .nav-logo .badge { width: 38px; height: 38px; border-radius: 10px; background: linear-gradient(135deg, var(--blue), var(--sky)); display: grid; place-items: center; font-family: 'Syne', sans-serif; font-weight: 800; font-size: .9rem; color: #fff; }
+    .nav-logo span { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; color: var(--white); line-height: 1.2; }
+    .nav-logo small { display: block; font-weight: 400; font-size: .72rem; color: var(--gray); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { text-decoration: none; color: var(--text); font-size: .88rem; font-weight: 500; transition: color .2s; }
+    .nav-links a:hover { color: var(--white); }
+    .nav-links a.active { color: var(--accent2); }
+    .nav-cta { background: var(--blue); color: #fff; padding: .55rem 1.3rem; border-radius: 8px; font-size: .85rem; font-weight: 600; text-decoration: none; transition: background .2s; }
+    .nav-cta:hover { background: var(--sky); }
+    .page-hero { padding: 8rem 4rem 4rem; position: relative; overflow: hidden; background: var(--navy2); border-bottom: 1px solid rgba(59,130,246,.12); }
+    .page-hero .grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(59,130,246,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(59,130,246,.06) 1px, transparent 1px); background-size: 60px 60px; }
+    .page-hero .glow { position: absolute; top: -20%; right: -10%; width: 500px; height: 500px; border-radius: 50%; background: radial-gradient(circle, rgba(26,79,214,.25) 0%, transparent 65%); }
+    .page-hero-content { position: relative; }
+    .section-tag { display: inline-block; font-size: .75rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--accent2); margin-bottom: .8rem; }
+    .page-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(2.2rem, 4vw, 3.2rem); letter-spacing: -.02em; line-height: 1.1; }
+    .page-title em { font-style: normal; background: linear-gradient(90deg, var(--sky), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .page-desc { margin-top: 1rem; font-size: 1.05rem; line-height: 1.75; color: var(--text); max-width: 560px; }
+    .stats-bar { background: var(--navy2); border-top: 1px solid rgba(59,130,246,.1); border-bottom: 1px solid rgba(59,130,246,.1); padding: 2rem 4rem; display: flex; gap: 3rem; }
+    .stat-item { text-align: center; }
+    .stat-num { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.8rem; background: linear-gradient(90deg, var(--white), var(--sky)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .stat-label { font-size: .75rem; color: var(--gray); text-transform: uppercase; letter-spacing: .06em; margin-top: .2rem; }
+
+    /* STICKY FILTER */
+    .filter-section {
+      padding: 1.2rem 4rem;
+      background: rgba(10,22,40,.95); backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(59,130,246,.1);
+      position: sticky; top: 64px; z-index: 50;
+    }
+    .filter-tabs { display: flex; gap: .6rem; flex-wrap: wrap; }
+    .filter-tab {
+      padding: .45rem 1.1rem; border-radius: 8px; font-size: .83rem; font-weight: 500; cursor: pointer;
+      border: 1px solid rgba(59,130,246,.2); color: var(--text); background: transparent;
+      transition: all .2s; font-family: 'DM Sans', sans-serif;
+    }
+    .filter-tab:hover { border-color: rgba(59,130,246,.5); color: var(--white); }
+    .filter-tab.active { background: var(--blue); border-color: var(--blue); color: #fff; }
+
+    .courses-section { padding: 4rem; }
+    .semester-block { margin-bottom: 4rem; scroll-margin-top: 140px; }
+    .semester-label { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.8rem; }
+    .semester-label h2 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.3rem; }
+    .semester-label .line { flex: 1; height: 1px; background: rgba(59,130,246,.15); }
+    .semester-label .count { font-size: .78rem; color: var(--gray); background: rgba(59,130,246,.1); border: 1px solid rgba(59,130,246,.2); padding: .2rem .7rem; border-radius: 99px; }
+    .courses-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
+    .course-card { background: var(--navy2); border: 1px solid rgba(59,130,246,.12); border-radius: 16px; padding: 1.5rem; position: relative; overflow: hidden; transition: transform .2s, border-color .2s, box-shadow .2s; }
+    .course-card:hover { transform: translateY(-4px); border-color: rgba(59,130,246,.35); box-shadow: 0 16px 40px rgba(0,0,0,.3); }
+    .course-card::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--blue), var(--sky)); opacity: 0; transition: opacity .2s; }
+    .course-card:hover::after { opacity: 1; }
+    .course-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1rem; gap: .5rem; }
+    .course-code { font-family: 'Courier New', monospace; font-size: .75rem; font-weight: 700; color: var(--sky); background: rgba(59,130,246,.1); border: 1px solid rgba(59,130,246,.2); padding: .2rem .6rem; border-radius: 5px; white-space: nowrap; }
+    .credit-badge { font-size: .72rem; color: var(--gray); background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.08); padding: .2rem .6rem; border-radius: 5px; white-space: nowrap; }
+    .course-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; margin-bottom: .5rem; line-height: 1.3; }
+    .course-desc { font-size: .83rem; color: var(--text); line-height: 1.65; margin-bottom: 1rem; }
+    .course-meta { display: flex; gap: .5rem; flex-wrap: wrap; }
+    .meta-tag { font-size: .7rem; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; padding: .18rem .55rem; border-radius: 4px; }
+    .meta-tag.theory  { background: rgba(59,130,246,.12); color: var(--sky); }
+    .meta-tag.lab     { background: rgba(16,185,129,.12); color: #34d399; }
+    .meta-tag.core    { background: rgba(245,158,11,.12); color: var(--accent2); }
+    .meta-tag.elective{ background: rgba(168,85,247,.12); color: #c084fc; }
+    footer { background: #060e1e; border-top: 1px solid rgba(59,130,246,.12); padding: 2rem 4rem; display: flex; justify-content: space-between; align-items: center; }
+    footer p { font-size: .8rem; color: var(--gray); }
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; } .nav-links, .nav-cta { display: none; }
+      .page-hero, .filter-section, .courses-section { padding-left: 1.5rem; padding-right: 1.5rem; }
+      .courses-grid { grid-template-columns: 1fr; }
+      .stats-bar { gap: 1.5rem; flex-wrap: wrap; padding: 1.5rem; }
+    }
+  </style>
 </head>
 <body>
-  <h1>Courses Page</h1>
-  <p>This page will be completed by the assigned team member.</p>
-  <a href="index.html">Back to Home</a>
+
+<nav>
+  <a class="nav-logo" href="index.html">
+    <div class="badge">CS</div>
+    <span>Computer Science <small>COMSATS University Islamabad</small></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="courses.html" class="active">Courses</a></li>
+    <li><a href="faculty.html">Faculty</a></li>
+    <li><a href="admissions.html">Admissions</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <a href="admissions.html" class="nav-cta">Apply Now</a>
+</nav>
+
+<div class="page-hero">
+  <div class="grid"></div>
+  <div class="glow"></div>
+  <div class="page-hero-content">
+    <div class="section-tag">Academic Programs</div>
+    <h1 class="page-title">Courses <em>Catalogue</em></h1>
+    <p class="page-desc">Explore our comprehensive curriculum designed to build strong foundations in computer science while keeping pace with industry demands.</p>
+  </div>
+</div>
+
+<div class="stats-bar">
+  <div class="stat-item"><div class="stat-num">40+</div><div class="stat-label">Total Courses</div></div>
+  <div class="stat-item"><div class="stat-num">8</div><div class="stat-label">Semesters</div></div>
+  <div class="stat-item"><div class="stat-num">136</div><div class="stat-label">Credit Hours</div></div>
+  <div class="stat-item"><div class="stat-num">15+</div><div class="stat-label">Electives</div></div>
+</div>
+
+<!-- STICKY FILTER TABS -->
+<div class="filter-section">
+  <div class="filter-tabs">
+    <button class="filter-tab active" onclick="scrollToSem('all', this)">All Semesters</button>
+    <button class="filter-tab" onclick="scrollToSem('sem1', this)">Semester 1</button>
+    <button class="filter-tab" onclick="scrollToSem('sem2', this)">Semester 2</button>
+    <button class="filter-tab" onclick="scrollToSem('sem3', this)">Semester 3</button>
+    <button class="filter-tab" onclick="scrollToSem('sem4', this)">Semester 4</button>
+    <button class="filter-tab" onclick="scrollToSem('sem5', this)">Semester 5</button>
+    <button class="filter-tab" onclick="scrollToSem('sem6', this)">Semester 6</button>
+    <button class="filter-tab" onclick="scrollToSem('sem7', this)">Semester 7</button>
+    <button class="filter-tab" onclick="scrollToSem('sem8', this)">Semester 8</button>
+  </div>
+</div>
+
+<div class="courses-section">
+
+  <div class="semester-block" id="sem1">
+    <div class="semester-label"><h2>Semester 1</h2><div class="line"></div><div class="count">5 courses</div></div>
+    <div class="courses-grid">
+      <div class="course-card"><div class="course-header"><span class="course-code">CS-101</span><span class="credit-badge">3 CH</span></div><div class="course-name">Introduction to Computing</div><p class="course-desc">Fundamentals of computers, number systems, basic programming concepts, and problem-solving techniques.</p><div class="course-meta"><span class="meta-tag theory">Theory</span><span class="meta-tag core">Core</span></div></div>
+      <div class="course-card"><div class="course-header"><span class="course-code">CS-102</span><span class="credit-badge">3 CH</span></div><div class="course-name">Programming Fundamentals</div><p class="course-desc">Introduction to programming using C++. Variables, control structures, functions, arrays, and basic algorithms.</p><div class="course-meta"><span class="meta-tag theory">Theory</span><span class="meta-tag lab">Lab</span><span class="meta-tag core">Core</span></div></div>
+      <div class="course-card"><div class="course-header"><span class="course-code">MTH-101</span><span class="credit-badge">3 CH</span></div><div class="course-name">Calculus & Analytical Geometry</div><p class="course-desc">Limits, derivatives, integrals, and their applications. Analytic geometry in two and three dimensions.</p><div class="course-meta"><span class="meta-tag theory">Theory</span><span class="meta-tag core">Core</span></div></div>
+      <div class="course-card"><div class="course-header"><span class="course-code">ENG-101</span><span class="credit-badge">3 CH</span></div><div class="course-name">Functional English</div><p class="course-desc">Academic writing, reading comprehension, communication skills, and technical report writing fundamentals.</p><div class="course-meta"><span class="meta-tag theory">Theory</span><span class="meta-tag core">Core</span></div></div>
+      <div class="course-card"><div class="course-header"><span class="course-code">PHY-101</span><span class="credit-badge">3 CH</span></div><div class="course-name">Applied Physics</div><p class="course-desc">Mechanics, waves, thermodynamics, and electricity with applications to computing systems and electronics.</p><div class="course-meta"><span class="meta-tag theory">Theory</span><span class="meta-tag lab">Lab</span><span class="meta-tag core">Core</span></div></div>
+    </div>
+  </div>
+
+  <div class="semester-block" id="sem2">
+    <div class="semester-label"><h2>Semester 2</h2><div class="line"></div><div class="count">5 courses</div></div>
+    <div class="courses-grid">
+      <div class="course-card"><div class="course-header"><span class="course-code">CS-201</span><span class="credit-badge">3 CH</span></div><div class="course-name">Object Oriented Programming</div><p class="course-desc">Classes, objects, inheritance, polymorphism, encapsulation, and design principles using C++ and Java.</p><div class="course-meta"><span class="meta-tag theory">Theory</span><span class="meta-tag lab">Lab</span><span class="meta-tag core">Core</span></div></div>
+      <div class="course-card"><div class="course-header"><span class="course-code">CS-202</span><span class="credit-badge">3 CH</span></div><div class="course-name">Digital Logic Design</div><p class="course-desc">Boolean algebra, logic gates, combinational and sequential circuits, flip-flops, and digital system design.</p><div class="course-meta"><span class="meta-tag theory">Theory</span><span class="meta-tag lab">Lab</span><span class="meta-tag core">Core</span></div></div>
+      <div class="course-card"><div class="course-header"><span class="course-code">MTH-201</span><span class="credit-badge">3 CH</span></div><div class="course-name">Linear Algebra</div><p class="course-desc">Vectors, matrices, determinants, linear transformations, eigenvalues and applications in computing.</p><div class="course-meta"><span class="meta-tag theory">Theory</span><span class="meta-tag core">Core</span></div></div>
+      <div class="course-card"><div class="course-header"><span class="course-code">CS-203</span><span class="credit-badge">3 CH</span></div><div class="course-name">Discrete Structures</div><p class="course-desc">Sets, relations, functions, graph theory, trees, logic, and proofs — the mathematical foundation of CS.</p><div class="course-meta"><span class="meta-tag theory">Theory</span><span class="meta-tag core">Core</span></div></div>
+      <div class="course-card"><div class="course-header"><span class="course-code">ENG-201</span><span class="credit-badge">3 CH</span></div><div class="course-name">Communication Skills</div><p class="course-desc">Presentation skills, technical writing, professional emails, and interpersonal communication in the workplace.</p><div class="course-meta"><span class="meta-tag theory">Theory</span><span class="meta-tag core">Core</span></div></div>
+    </div>
+  </div>
+
+  <div class="semester-block" id="sem3">
+    <div class="semester-label"><h2>Semester 3</h2><div class="line"></div><div class="count">5 courses</div></div>
+    <div class="courses-grid">
+      <div class="course-card"><div class="course-header"><span class="course-code">CS-301</span><span class="credit-badge">3 CH</span></div><div class="course-name">Data Structures & Algorithms</div><p class="course-desc">Arrays, linked lists, stacks, queues, trees, graphs, sorting and searching algorithms with complexity analysis.</p><div class="course-meta"><span class="meta-tag theory">Theory</span><span class="meta-tag lab">Lab</span><span class="meta-tag core">Core</span></div></div>
+      <div class="course-card"><div class="course-header"><span class="course-code">CS-302</span><span class="credit-badge">3 CH</span></div><div class="course-name">Computer Organization & Assembly</div><p class="course-desc">CPU architecture, memory hierarchy, instruction sets, and assembly language programming.</p><div class="course-meta"><span class="meta-tag theory">Theory</span><span class="meta-tag lab">Lab</span><span class="meta-tag core">Core</span></div></div>
+      <div class="course-card"><div class="course-header"><span class="course-code">CS-303</span><span class="credit-badge">3 CH</span></div><div class="course-name">Database Systems</div><p class="course-desc">Relational model, SQL, normalization, ER diagrams, transactions, and database design principles.</p><div class="course-meta"><span class="meta-tag theory">Theory</span><span class="meta-tag lab">Lab</span><span class="meta-tag core">Core</span></div></div>
+      <div class="course-card"><div class="course-header"><span class="course-code">MTH-301</span><span class="credit-badge">3 CH</span></div><div class="course-name">Probability & Statistics</div><p class="course-desc">Probability theory, random variables, distributions, hypothesis testing, and statistical inference.</p><div class="course-meta"><span class="meta-tag theory">Theory</span><span class="meta-tag core">Core</span></div></div>
+      <div class="course-card"><div class="course-header"><span class="course-code">CS-304</span><span class="credit-badge">3 CH</span></div><div class="course-name">Web Technologies</div><p class="course-desc">HTML5, CSS3, JavaScript, responsive design, RESTful APIs, and introduction to modern web frameworks.</p><div class="course-meta"><span class="meta-tag theory">Theory</span><span class="meta-tag lab">Lab</span><span class="meta-tag core">Core</span></div></div>
+    </div>
+  </div>
+
+  <div class="semester-block" id="sem4">
+    <div class="semester-label"><h2>Semester 4</h2><div class="line"></div><div class="count">5 courses</div></div>
+    <div class="courses-grid">
+      <div class="course-card"><div class="course-header"><span class="course-code">CS-401</span><span class="credit-badge">3 CH</span></div><div class="course-name">Operating Systems</div><p class="course-desc">Process management, memory management, file systems, scheduling algorithms, and concurrency control.</p><div class="course-meta"><span class="meta-tag theory">Theory</span><span class="meta-tag lab">Lab</span><span class="meta-tag core">Core</span></div></div>
+      <div class="course-card"><div class="course-header"><span class="course-code">CS-402</span><span class="credit-badge">3 CH</span></div><div class="course-name">Design & Analysis of Algorithms</div><p class="course-desc">Algorithm design paradigms: divide and conquer, dynamic programming, greedy algorithms, and NP-completeness.</p><div class="course-meta"><span class="meta-tag theory">Theory</span><span class="meta-tag core">Core</span></div></div>
+      <div class="course-card"><div class="course-header"><span class="course-code">CS-403</span><span class="credit-badge">3 CH</span></div><div class="course-name">Theory of Automata</div><p class="course-desc">Finite automata, regular expressions, context-free grammars, pushdown automata, and Turing machines.</p><div class="course-meta"><span class="meta-tag theory">Theory</span><span class="meta-tag core">Core</span></div></div>
+      <div class="course-card"><div class="course-header"><span class="course-code">CS-404</span><span class="credit-badge">3 CH</span></div><div class="course-name">Computer Graphics</div><p class="course-desc">2D/3D transformations, rendering, rasterization, shading models, and OpenGL programming basics.</p><div class="course-meta"><span class="meta-tag theory">Theory</span><span class="meta-tag lab">Lab</span><span class="meta-tag elective">Elective</span></div></div>
+      <div class="course-card"><div class="course-header"><span class="course-code">HUM-401</span><span class="credit-badge">3 CH</span></div><div class="course-name">Islamic Studies / Ethics</div><p class="course-desc">Islamic principles, professional ethics, social responsibility, and moral frameworks for computing professionals.</p><div class="course-meta"><span class="meta-tag theory">Theory</span><span class="meta-tag core">Core</span></div></div>
+    </div>
+  </div>
+
+  <div class="semester-block" id="sem5">
+    <div class="semester-label"><h2>Semester 5</h2><div class="line"></div><div class="count">5 courses</div></div>
+    <div class="courses-grid">
+      <div class="course-card"><div class="course-header"><span class="course-code">CS-501</span><span class="credit-badge">3 CH</span></div><div class="course-name">Computer Networks</div><p class="course-desc">OSI model, TCP/IP, routing protocols, network security fundamentals, and wireless communications.</p><div class="course-meta"><span class="meta-tag theory">Theory</span><span class="meta-tag lab">Lab</span><span class="meta-tag core">Core</span></div></div>
+      <div class="course-card"><div class="course-header"><span class="course-code">CS-502</span><span class="credit-badge">3 CH</span></div><div class="course-name">Machine Learning</div><p class="course-desc">Supervised and unsupervised learning, regression, classification, clustering, and neural network fundamentals.</p><div class="course-meta"><span class="meta-tag theory">Theory</span><span class="meta-tag lab">Lab</span><span class="meta-tag elective">Elective</span></div></div>
+      <div class="course-card"><div class="course-header"><span class="course-code">CS-503</span><span class="credit-badge">3 CH</span></div><div class="course-name">Software Engineering</div><p class="course-desc">SDLC models, requirements engineering, UML, design patterns, testing strategies, and project management.</p><div class="course-meta"><span class="meta-tag theory">Theory</span><span class="meta-tag core">Core</span></div></div>
+      <div class="course-card"><div class="course-header"><span class="course-code">CS-504</span><span class="credit-badge">3 CH</span></div><div class="course-name">Compiler Construction</div><p class="course-desc">Lexical analysis, parsing, semantic analysis, code generation, and optimization techniques.</p><div class="course-meta"><span class="meta-tag theory">Theory</span><span class="meta-tag lab">Lab</span><span class="meta-tag core">Core</span></div></div>
+      <div class="course-card"><div class="course-header"><span class="course-code">CS-505</span><span class="credit-badge">3 CH</span></div><div class="course-name">Information Security</div><p class="course-desc">Cryptography, network security, ethical hacking basics, vulnerability assessment, and security policies.</p><div class="course-meta"><span class="meta-tag theory">Theory</span><span class="meta-tag elective">Elective</span></div></div>
+    </div>
+  </div>
+
+  <div class="semester-block" id="sem6">
+    <div class="semester-label"><h2>Semester 6</h2><div class="line"></div><div class="count">5 courses</div></div>
+    <div class="courses-grid">
+      <div class="course-card"><div class="course-header"><span class="course-code">CS-601</span><span class="credit-badge">3 CH</span></div><div class="course-name">Artificial Intelligence</div><p class="course-desc">Search algorithms, knowledge representation, machine learning basics, neural networks, and AI applications.</p><div class="course-meta"><span class="meta-tag theory">Theory</span><span class="meta-tag lab">Lab</span><span class="meta-tag core">Core</span></div></div>
+      <div class="course-card"><div class="course-header"><span class="course-code">CS-602</span><span class="credit-badge">3 CH</span></div><div class="course-name">Parallel & Distributed Computing</div><p class="course-desc">Parallel architectures, distributed systems, message passing, synchronization, and cloud computing models.</p><div class="course-meta"><span class="meta-tag theory">Theory</span><span class="meta-tag core">Core</span></div></div>
+      <div class="course-card"><div class="course-header"><span class="course-code">CS-603</span><span class="credit-badge">1 CH</span></div><div class="course-name">DevOps for Cloud Computing</div><p class="course-desc">CI/CD pipelines, Docker, GitHub Actions, cloud deployment, Git Flow, and infrastructure as code practices.</p><div class="course-meta"><span class="meta-tag lab">Lab</span><span class="meta-tag core">Core</span></div></div>
+      <div class="course-card"><div class="course-header"><span class="course-code">CS-604</span><span class="credit-badge">3 CH</span></div><div class="course-name">Mobile Application Development</div><p class="course-desc">Android and iOS development, UI/UX for mobile, APIs, local storage, and publishing to app stores.</p><div class="course-meta"><span class="meta-tag theory">Theory</span><span class="meta-tag lab">Lab</span><span class="meta-tag elective">Elective</span></div></div>
+      <div class="course-card"><div class="course-header"><span class="course-code">CS-605</span><span class="credit-badge">3 CH</span></div><div class="course-name">Final Year Project I</div><p class="course-desc">Project proposal, literature review, requirements analysis, and initial design phase of the capstone project.</p><div class="course-meta"><span class="meta-tag lab">Lab</span><span class="meta-tag core">Core</span></div></div>
+    </div>
+  </div>
+
+  <div class="semester-block" id="sem7">
+    <div class="semester-label"><h2>Semester 7</h2><div class="line"></div><div class="count">4 courses</div></div>
+    <div class="courses-grid">
+      <div class="course-card"><div class="course-header"><span class="course-code">CS-701</span><span class="credit-badge">3 CH</span></div><div class="course-name">Big Data Analytics</div><p class="course-desc">Hadoop, Spark, MapReduce, data pipelines, real-time processing, and large-scale data visualization.</p><div class="course-meta"><span class="meta-tag theory">Theory</span><span class="meta-tag lab">Lab</span><span class="meta-tag elective">Elective</span></div></div>
+      <div class="course-card"><div class="course-header"><span class="course-code">CS-702</span><span class="credit-badge">3 CH</span></div><div class="course-name">Cloud Computing</div><p class="course-desc">IaaS, PaaS, SaaS, AWS/Azure/GCP services, containerisation, serverless architecture, and cloud security.</p><div class="course-meta"><span class="meta-tag theory">Theory</span><span class="meta-tag lab">Lab</span><span class="meta-tag elective">Elective</span></div></div>
+      <div class="course-card"><div class="course-header"><span class="course-code">CS-703</span><span class="credit-badge">3 CH</span></div><div class="course-name">Human Computer Interaction</div><p class="course-desc">User-centered design, usability testing, prototyping, accessibility, and interface design principles.</p><div class="course-meta"><span class="meta-tag theory">Theory</span><span class="meta-tag elective">Elective</span></div></div>
+      <div class="course-card"><div class="course-header"><span class="course-code">CS-704</span><span class="credit-badge">3 CH</span></div><div class="course-name">Final Year Project II</div><p class="course-desc">Implementation, testing, documentation, and final presentation of the capstone software project.</p><div class="course-meta"><span class="meta-tag lab">Lab</span><span class="meta-tag core">Core</span></div></div>
+    </div>
+  </div>
+
+  <div class="semester-block" id="sem8">
+    <div class="semester-label"><h2>Semester 8</h2><div class="line"></div><div class="count">3 courses</div></div>
+    <div class="courses-grid">
+      <div class="course-card"><div class="course-header"><span class="course-code">CS-801</span><span class="credit-badge">3 CH</span></div><div class="course-name">Entrepreneurship & Innovation</div><p class="course-desc">Business models, startup ecosystems, product development, pitching, and technology commercialization.</p><div class="course-meta"><span class="meta-tag theory">Theory</span><span class="meta-tag core">Core</span></div></div>
+      <div class="course-card"><div class="course-header"><span class="course-code">CS-802</span><span class="credit-badge">3 CH</span></div><div class="course-name">Professional Practices</div><p class="course-desc">Software industry norms, intellectual property, project estimation, client communication, and career readiness.</p><div class="course-meta"><span class="meta-tag theory">Theory</span><span class="meta-tag core">Core</span></div></div>
+      <div class="course-card"><div class="course-header"><span class="course-code">CS-803</span><span class="credit-badge">6 CH</span></div><div class="course-name">Internship / Thesis</div><p class="course-desc">Industry internship or research thesis providing real-world experience in a professional or academic setting.</p><div class="course-meta"><span class="meta-tag core">Core</span></div></div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p>© 2025 Department of Computer Science, COMSATS University Islamabad, Lahore Campus.</p>
+  <p>Built with GitHub Actions · Docker · Render.com</p>
+</footer>
+
+<script>
+  function scrollToSem(id, btn) {
+    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    if (id === 'all') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+</script>
+
 </body>
 </html>
