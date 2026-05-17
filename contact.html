@@ -1,13 +1,369 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Contact — CS Dept COMSATS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --navy:#0a1628; --navy2:#0f2044; --blue:#1a4fd6; --sky:#3b82f6; --accent2:#fbbf24; --white:#fff; --gray:#94a3b8; --text:#cbd5e1; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--navy); color: var(--white); overflow-x: hidden; }
+
+    /* NAV */
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 4rem; background: rgba(10,22,40,0.92); backdrop-filter: blur(18px); border-bottom: 1px solid rgba(59,130,246,0.15); }
+    .nav-logo { display: flex; align-items: center; gap: .75rem; text-decoration: none; }
+    .nav-logo .badge { width: 38px; height: 38px; border-radius: 10px; background: linear-gradient(135deg, var(--blue), var(--sky)); display: grid; place-items: center; font-family: 'Syne', sans-serif; font-weight: 800; font-size: .9rem; color: #fff; }
+    .nav-logo span { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; color: var(--white); line-height: 1.2; }
+    .nav-logo small { display: block; font-weight: 400; font-size: .72rem; color: var(--gray); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { text-decoration: none; color: var(--text); font-size: .88rem; font-weight: 500; transition: color .2s; }
+    .nav-links a:hover { color: var(--white); }
+    .nav-links a.active { color: var(--accent2); }
+    .nav-cta { background: var(--blue); color: #fff; padding: .55rem 1.3rem; border-radius: 8px; font-size: .85rem; font-weight: 600; text-decoration: none; transition: background .2s; }
+    .nav-cta:hover { background: var(--sky); }
+
+    /* PAGE HERO */
+    .page-hero { padding: 8rem 4rem 3rem; position: relative; overflow: hidden; background: var(--navy2); border-bottom: 1px solid rgba(59,130,246,.12); }
+    .page-hero .grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(59,130,246,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(59,130,246,.06) 1px, transparent 1px); background-size: 60px 60px; }
+    .page-hero .glow { position: absolute; top: -20%; right: -10%; width: 500px; height: 500px; border-radius: 50%; background: radial-gradient(circle, rgba(26,79,214,.25) 0%, transparent 65%); }
+    .page-hero-content { position: relative; }
+    .section-tag { display: inline-block; font-size: .75rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--accent2); margin-bottom: .8rem; }
+    .page-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(2.2rem, 4vw, 3.2rem); letter-spacing: -.02em; line-height: 1.1; }
+    .page-title em { font-style: normal; background: linear-gradient(90deg, var(--sky), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .page-desc { margin-top: 1rem; font-size: 1rem; line-height: 1.75; color: var(--text); max-width: 560px; }
+
+    /* MAIN LAYOUT */
+    .contact-section { padding: 4rem 4rem 6rem; }
+    .contact-grid { display: grid; grid-template-columns: 1fr 1.4fr; gap: 3rem; align-items: start; }
+
+    /* INFO CARDS */
+    .info-stack { display: flex; flex-direction: column; gap: 1rem; }
+    .info-card { background: var(--navy2); border: 1px solid rgba(59,130,246,.13); border-radius: 16px; padding: 1.5rem 1.6rem; display: flex; gap: 1.1rem; align-items: flex-start; transition: border-color .2s, transform .2s; }
+    .info-card:hover { border-color: rgba(59,130,246,.38); transform: translateX(4px); }
+    .info-icon-wrap { width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0; display: grid; place-items: center; font-size: 1.2rem; }
+    .ic-blue  { background: rgba(26,79,214,.2); }
+    .ic-amber { background: rgba(245,158,11,.15); }
+    .ic-green { background: rgba(16,185,129,.15); }
+    .ic-purple{ background: rgba(124,58,237,.18); }
+    .info-body h4 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: .92rem; margin-bottom: .35rem; }
+    .info-body p, .info-body a { font-size: .85rem; color: var(--text); line-height: 1.65; text-decoration: none; display: block; transition: color .15s; }
+    .info-body a:hover { color: var(--sky); }
+
+    /* SOCIAL ROW */
+    .social-row { display: flex; gap: .7rem; margin-top: 1rem; }
+    .social-btn { display: flex; align-items: center; gap: .45rem; background: rgba(255,255,255,.05); border: 1px solid rgba(59,130,246,.18); border-radius: 8px; padding: .45rem .9rem; font-size: .78rem; font-weight: 500; color: var(--text); text-decoration: none; transition: all .2s; }
+    .social-btn:hover { background: rgba(59,130,246,.12); border-color: rgba(59,130,246,.4); color: var(--white); }
+
+    /* FORM CARD */
+    .form-card { background: var(--navy2); border: 1px solid rgba(59,130,246,.13); border-radius: 20px; padding: 2.2rem 2.4rem; }
+    .form-card-header { margin-bottom: 1.8rem; }
+    .form-card-header h3 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.35rem; margin-bottom: .4rem; }
+    .form-card-header p { font-size: .88rem; color: var(--text); }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .field { display: flex; flex-direction: column; gap: .4rem; margin-bottom: 1rem; }
+    .field label { font-size: .78rem; font-weight: 600; color: var(--gray); letter-spacing: .04em; text-transform: uppercase; }
+    .field input, .field select, .field textarea {
+      background: rgba(255,255,255,.04); border: 1px solid rgba(59,130,246,.18);
+      border-radius: 10px; padding: .65rem 1rem; font-size: .88rem; color: var(--white);
+      font-family: 'DM Sans', sans-serif; outline: none; transition: border-color .2s, background .2s;
+      resize: none;
+    }
+    .field input::placeholder, .field textarea::placeholder { color: var(--gray); }
+    .field input:focus, .field select:focus, .field textarea:focus { border-color: rgba(59,130,246,.5); background: rgba(59,130,246,.05); }
+    .field select option { background: var(--navy2); color: var(--white); }
+    .field textarea { min-height: 120px; }
+
+    .submit-btn { width: 100%; background: linear-gradient(135deg, var(--blue), var(--sky)); color: #fff; border: none; padding: .85rem 2rem; border-radius: 10px; font-weight: 600; font-size: .95rem; font-family: 'DM Sans', sans-serif; cursor: pointer; box-shadow: 0 4px 24px rgba(26,79,214,.38); transition: transform .2s, box-shadow .2s; margin-top: .4rem; }
+    .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(26,79,214,.5); }
+
+    .form-note { font-size: .75rem; color: var(--gray); text-align: center; margin-top: .9rem; }
+
+    /* SUCCESS TOAST */
+    .toast { display: none; align-items: center; gap: .7rem; background: rgba(16,185,129,.12); border: 1px solid rgba(16,185,129,.3); border-radius: 10px; padding: .8rem 1.1rem; margin-top: 1rem; font-size: .85rem; color: #6ee7b7; }
+    .toast.show { display: flex; }
+
+    /* MAP */
+    .map-section { padding: 0 4rem 5rem; }
+    .map-label { font-size: .75rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--accent2); margin-bottom: .8rem; display: block; }
+    .map-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.6rem; letter-spacing: -.02em; margin-bottom: 1.6rem; }
+    .map-wrap { border-radius: 20px; overflow: hidden; border: 1px solid rgba(59,130,246,.15); height: 380px; position: relative; }
+    .map-wrap iframe { width: 100%; height: 100%; border: none; filter: brightness(.88) saturate(.7) hue-rotate(195deg); }
+    .map-overlay { position: absolute; inset: 0; pointer-events: none; border-radius: 20px; box-shadow: inset 0 0 0 1px rgba(59,130,246,.15); }
+
+    /* DEPT CONTACTS */
+    .dept-section { padding: 0 4rem 5rem; }
+    .dept-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; margin-top: 2.5rem; }
+    .dept-card { background: var(--navy2); border: 1px solid rgba(59,130,246,.12); border-radius: 16px; padding: 1.5rem 1.6rem; transition: border-color .2s, transform .2s; }
+    .dept-card:hover { border-color: rgba(59,130,246,.35); transform: translateY(-4px); }
+    .dept-card h4 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: .92rem; margin-bottom: .6rem; }
+    .dept-card p, .dept-card a { font-size: .82rem; color: var(--text); line-height: 1.7; text-decoration: none; display: block; }
+    .dept-card a:hover { color: var(--sky); }
+    .dept-badge { display: inline-block; font-size: .65rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; padding: .18rem .6rem; border-radius: 5px; margin-bottom: .8rem; background: rgba(59,130,246,.1); color: var(--sky); border: 1px solid rgba(59,130,246,.2); }
+
+    /* FOOTER */
+    footer { background: #060e1e; border-top: 1px solid rgba(59,130,246,.12); padding: 2rem 4rem; display: flex; justify-content: space-between; }
+    footer p { font-size: .8rem; color: var(--gray); }
+
+    /* RESPONSIVE */
+    @media (max-width: 1024px) { .contact-grid { grid-template-columns: 1fr; } .dept-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; } .nav-links, .nav-cta { display: none; }
+      .page-hero, .contact-section, .map-section, .dept-section, footer { padding-left: 1.5rem; padding-right: 1.5rem; }
+      .form-row { grid-template-columns: 1fr; }
+      .dept-grid { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
-  <h1>Contact Page</h1>
-  <p>This page will be completed by the assigned team member.</p>
-  <a href="index.html">Back to Home</a>
+
+<nav>
+  <a class="nav-logo" href="index.html">
+    <div class="badge">CS</div>
+    <span>Computer Science <small>COMSATS University Islamabad</small></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="courses.html">Courses</a></li>
+    <li><a href="faculty.html">Faculty</a></li>
+    <li><a href="admissions.html">Admissions</a></li>
+    <li><a href="contact.html" class="active">Contact</a></li>
+  </ul>
+  <a href="admissions.html" class="nav-cta">Apply Now</a>
+</nav>
+
+<div class="page-hero">
+  <div class="grid"></div><div class="glow"></div>
+  <div class="page-hero-content">
+    <div class="section-tag">Get in Touch</div>
+    <h1 class="page-title">Contact <em>&amp; Location</em></h1>
+    <p class="page-desc">Reach out to the Department of Computer Science for admissions queries, academic matters, research collaborations, or general information.</p>
+  </div>
+</div>
+
+<!-- MAIN CONTACT GRID -->
+<section class="contact-section">
+  <div class="contact-grid">
+
+    <!-- LEFT: INFO CARDS -->
+    <div class="info-stack">
+
+      <div class="info-card">
+        <div class="info-icon-wrap ic-blue">📍</div>
+        <div class="info-body">
+          <h4>Campus Address</h4>
+          <p>Department of Computer Science<br>COMSATS University Islamabad<br>Raiwind Road, Lahore — 54000<br>Punjab, Pakistan</p>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="info-icon-wrap ic-amber">📞</div>
+        <div class="info-body">
+          <h4>Phone</h4>
+          <a href="tel:+924211100107">+92-42-111-001-007</a>
+          <a href="tel:+924235321010">+92-42-3532-1010 (Direct)</a>
+          <p style="margin-top:.3rem;font-size:.78rem;">Mon – Fri &nbsp;|&nbsp; 8:00 am – 5:00 pm</p>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="info-icon-wrap ic-green">✉️</div>
+        <div class="info-body">
+          <h4>Email</h4>
+          <a href="mailto:cs@comsats.edu.pk">cs@comsats.edu.pk</a>
+          <a href="mailto:admissions.cs@comsats.edu.pk">admissions.cs@comsats.edu.pk</a>
+          <a href="mailto:research.cs@comsats.edu.pk">research.cs@comsats.edu.pk</a>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="info-icon-wrap ic-purple">🕐</div>
+        <div class="info-body">
+          <h4>Office Hours</h4>
+          <p>Monday – Thursday &nbsp;8:00 am – 5:00 pm</p>
+          <p>Friday &nbsp;8:00 am – 1:00 pm</p>
+          <p>Saturday &nbsp;Closed</p>
+          <p>Sunday &nbsp;Closed</p>
+        </div>
+      </div>
+
+      <div class="social-row">
+        <a class="social-btn" href="#">🔗 LinkedIn</a>
+        <a class="social-btn" href="#">𝕏 Twitter</a>
+        <a class="social-btn" href="#">📘 Facebook</a>
+        <a class="social-btn" href="#">▶️ YouTube</a>
+      </div>
+
+    </div>
+
+    <!-- RIGHT: CONTACT FORM -->
+    <div class="form-card">
+      <div class="form-card-header">
+        <h3>Send a Message</h3>
+        <p>Fill in the form and we will get back to you within 1–2 working days.</p>
+      </div>
+
+      <div class="form-row">
+        <div class="field">
+          <label>First Name</label>
+          <input type="text" placeholder="e.g. John" id="fname" />
+        </div>
+        <div class="field">
+          <label>Last Name</label>
+          <input type="text" placeholder="e.g. Doe" id="lname" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="field">
+          <label>Email Address</label>
+          <input type="email" placeholder="you@example.com" id="email" />
+        </div>
+        <div class="field">
+          <label>Phone (optional)</label>
+          <input type="tel" placeholder="+92 300 0000000" id="phone" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Subject / Department</label>
+        <select id="subject">
+          <option value="" disabled selected>Select a topic…</option>
+          <option>Admissions Inquiry</option>
+          <option>Academic / Course Matter</option>
+          <option>Research Collaboration</option>
+          <option>Faculty Contact</option>
+          <option>Student Affairs</option>
+          <option>Industry Partnership</option>
+          <option>General Information</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Message</label>
+        <textarea id="message" placeholder="Describe your query in detail…"></textarea>
+      </div>
+
+      <button class="submit-btn" onclick="handleSubmit()">Send Message</button>
+
+      <div class="toast" id="toast">
+        ✅ &nbsp;Message sent — we will respond within 1–2 working days.
+      </div>
+
+      <p class="form-note">Your information is never shared with third parties.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- MAP -->
+<section class="map-section">
+  <span class="map-label">Find Us</span>
+  <h2 class="map-title">Campus Location</h2>
+  <div class="map-wrap">
+    <iframe
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3406.5!2d74.2100689!3d31.4027337!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3918ffd0bc7c5f71%3A0x879e9b82857bcd94!2sCOMSATS%20University!5e0!3m2!1sen!2spk!4v1716900000000!5m2!1sen!2spk"
+      allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
+    <div class="map-overlay"></div>
+  </div>
+</section>
+
+<!-- DEPARTMENTAL CONTACTS -->
+<section class="dept-section">
+  <span class="section-tag">Departmental Offices</span>
+  <h2 style="font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(1.6rem,3vw,2.2rem);letter-spacing:-.02em;margin-top:.4rem;">Key Contacts</h2>
+  <div class="dept-grid">
+
+    <div class="dept-card">
+      <div class="dept-badge">Admissions</div>
+      <h4>Undergraduate Admissions</h4>
+      <p>For BS programme applications, merit lists, and entry test queries.</p>
+      <a href="mailto:admissions.cs@comsats.edu.pk">admissions.cs@comsats.edu.pk</a>
+      <a href="tel:+924211100107">+92-42-111-001-007 Ext. 201</a>
+    </div>
+
+    <div class="dept-card">
+      <div class="dept-badge">Postgraduate</div>
+      <h4>MS / PhD Programs</h4>
+      <p>Inquiries about graduate admissions, thesis supervision, and research funding.</p>
+      <a href="mailto:pg.cs@comsats.edu.pk">pg.cs@comsats.edu.pk</a>
+      <a href="tel:+924211100107">+92-42-111-001-007 Ext. 215</a>
+    </div>
+
+    <div class="dept-card">
+      <div class="dept-badge">Research</div>
+      <h4>Research & Innovation</h4>
+      <p>Collaborations, grants, joint publications, and lab access requests.</p>
+      <a href="mailto:research.cs@comsats.edu.pk">research.cs@comsats.edu.pk</a>
+      <a href="tel:+924211100107">+92-42-111-001-007 Ext. 230</a>
+    </div>
+
+    <div class="dept-card">
+      <div class="dept-badge">Student Affairs</div>
+      <h4>Student Services</h4>
+      <p>Transcripts, degree issuance, student ID, and welfare concerns.</p>
+      <a href="mailto:students.cs@comsats.edu.pk">students.cs@comsats.edu.pk</a>
+      <a href="tel:+924211100107">+92-42-111-001-007 Ext. 208</a>
+    </div>
+
+    <div class="dept-card">
+      <div class="dept-badge">Industry</div>
+      <h4>Industry & Partnerships</h4>
+      <p>Internship programmes, MoUs, job fairs, and corporate training.</p>
+      <a href="mailto:industry.cs@comsats.edu.pk">industry.cs@comsats.edu.pk</a>
+      <a href="tel:+924211100107">+92-42-111-001-007 Ext. 225</a>
+    </div>
+
+    <div class="dept-card">
+      <div class="dept-badge">IT Support</div>
+      <h4>Technical Support</h4>
+      <p>Lab access, student portal issues, LMS support, and software licensing.</p>
+      <a href="mailto:itsupport.cs@comsats.edu.pk">itsupport.cs@comsats.edu.pk</a>
+      <a href="tel:+924211100107">+92-42-111-001-007 Ext. 245</a>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  <p>© 2025 Department of Computer Science, COMSATS University Islamabad, Lahore Campus.</p>
+  <p>Built with GitHub Actions · Docker · Render.com</p>
+</footer>
+
+<script>
+  function handleSubmit() {
+    const fname = document.getElementById('fname').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const subject = document.getElementById('subject').value;
+    const message = document.getElementById('message').value.trim();
+
+    if (!fname || !email || !subject || !message) {
+      alert('Please fill in all required fields before sending.');
+      return;
+    }
+
+    const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRe.test(email)) {
+      alert('Please enter a valid email address.');
+      return;
+    }
+
+    document.getElementById('toast').classList.add('show');
+    document.getElementById('fname').value = '';
+    document.getElementById('lname').value = '';
+    document.getElementById('email').value = '';
+    document.getElementById('phone').value = '';
+    document.getElementById('subject').value = '';
+    document.getElementById('message').value = '';
+
+    setTimeout(() => document.getElementById('toast').classList.remove('show'), 5000);
+  }
+</script>
+
 </body>
 </html>
